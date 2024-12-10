@@ -1,5 +1,7 @@
 package factory;
 
+import model.ItemBiblioteca; //importando
+
 public class LivroFactory extends ItemBibliotecaFactory {
     @Override
     public ItemBiblioteca criarItem(String titulo, String autor) {

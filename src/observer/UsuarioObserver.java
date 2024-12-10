@@ -1,5 +1,8 @@
 package observer;
 
+import model.ItemBiblioteca;
+import model.Usuario;
+
 public class UsuarioObserver implements Observer {
     private Usuario usuario;
 

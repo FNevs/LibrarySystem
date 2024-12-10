@@ -1,4 +1,5 @@
 package model;
+import strategy.*; //importando
 
 import java.util.Date;
 
