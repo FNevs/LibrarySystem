@@ -19,4 +19,3 @@ public class Usuario {
     public String getTelefone() { return telefone; }
     public String getTipo() { return tipo; }
 }
-

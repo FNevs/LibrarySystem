@@ -1,5 +1,6 @@
 package model;
-import strategy.*; //importando
+
+import strategy.EmprestimoStrategy;
 
 import java.util.Date;
 
@@ -8,7 +9,6 @@ public class Emprestimo {
     private ItemBiblioteca item;
     private Date dataEmprestimo;
     private Date dataDevolucao;
-    private String status;
     private EmprestimoStrategy strategy;
 
     public Emprestimo(Usuario usuario, ItemBiblioteca item, EmprestimoStrategy strategy) {
@@ -17,13 +17,21 @@ public class Emprestimo {
         this.strategy = strategy;
         this.dataEmprestimo = new Date();
         this.dataDevolucao = strategy.calcularPrazo(dataEmprestimo);
-        this.status = "Ativo";
     }
 
     public void renovar() {
         this.dataDevolucao = strategy.calcularPrazo(new Date());
     }
 
-    public String getStatus() { return status; }
-    public Date getDataDevolucao() { return dataDevolucao; }
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public ItemBiblioteca getItem() {
+        return item;
+    }
+
+    public Date getDataDevolucao() {
+        return dataDevolucao;
+    }
 }

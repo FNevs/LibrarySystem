@@ -1,5 +1,7 @@
 package factory;
 
+import observer.UsuarioObserver;
+
 public abstract class ItemBiblioteca {
     protected String titulo;
     protected String autor;
@@ -11,4 +13,8 @@ public abstract class ItemBiblioteca {
     public String getAutor() {
         return autor;
     }
+
+    public abstract String getTipo(); // Adicionado para diferenciar tipos de itens
+
+    protected abstract void addObserver(UsuarioObserver alunoObserver);
 }
