@@ -16,7 +16,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Serviços e variáveis principais
         UsuarioService usuarioService = new UsuarioService();
         BibliotecaService bibliotecaService = new BibliotecaService();
         HistoricoEmprestimo historicoEmprestimo = new HistoricoEmprestimo();
@@ -35,7 +34,7 @@ public class Main {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             int opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            scanner.nextLine();  
 
             switch (opcao) {
                 case 1:
@@ -104,7 +103,7 @@ public class Main {
         System.out.println("4. Consultar Itens");
         System.out.print("Escolha uma opção: ");
         int opcao = scanner.nextInt();
-        scanner.nextLine(); // Limpar buffer
+        scanner.nextLine(); 
 
         switch (opcao) {
             case 1:
@@ -167,7 +166,6 @@ private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioS
     String matricula = scanner.nextLine();
     Usuario usuario = usuarioService.consultarUsuario(matricula);
 
-    // Verifica se o usuário existe
     if (usuario == null) {
         System.out.println("Usuário não encontrado.");
         return;
@@ -176,14 +174,12 @@ private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioS
     System.out.print("Digite o título do item: ");
     String titulo = scanner.nextLine();
     
-    // Verifica se o item existe no catálogo
     List<ItemBiblioteca> itensEncontrados = bibliotecaService.buscarPorTitulo(titulo);
     if (itensEncontrados.isEmpty()) {
         System.out.println("Item não encontrado no catálogo.");
         return;
     }
 
-    // Pega o primeiro item encontrado (ou outros critérios, caso necessário)
     ItemBiblioteca item = itensEncontrados.get(0);
 
     EmprestimoStrategy strategy;
@@ -204,7 +200,6 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
     System.out.print("Digite o título do item devolvido: ");
     String tituloItem = scanner.nextLine();
 
-    // Solicite que o usuário insira a data de devolução
     System.out.print("Digite a data de devolução (formato: dd/MM/yyyy): ");
     String dataDevolucaoStr = scanner.nextLine();
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -217,12 +212,23 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
         return;
     }
 
-    // Encontre o item no histórico de empréstimos
     Emprestimo emprestimo = historicoEmprestimo.buscarEmprestimoPorTitulo(tituloItem);
     if (emprestimo != null) {
-        // Defina a data de devolução corretamente
+        Date dataPrevistaDevolucao = emprestimo.getDataDevolucao();
+
+        long diferencaEmMillis = dataDevolucao.getTime() - dataPrevistaDevolucao.getTime();
+        long diasAtraso = diferencaEmMillis / (1000 * 60 * 60 * 24);  // Converte milissegundos para dias
+
+        if (diasAtraso > 0) {
+            double taxaMulta = 1.50;
+            double multa = diasAtraso * taxaMulta;
+            System.out.println("O item está " + diasAtraso + " dias atrasado. Multa: R$ " + multa);
+        } else {
+            System.out.println("Devolução dentro do prazo. Sem multa.");
+        }
+
         emprestimo.setDataDevolucao(dataDevolucao);
-        historicoEmprestimo.registrarDevolucao(emprestimo); // Passa o objeto Emprestimo
+        historicoEmprestimo.registrarDevolucao(emprestimo); 
         System.out.println("Devolução registrada! Data de devolução: " + emprestimo.getDataDevolucao());
     } else {
         System.out.println("Item não encontrado no histórico de empréstimos.");
