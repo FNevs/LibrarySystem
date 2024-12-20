@@ -97,6 +97,10 @@ public class Emprestimo {
     public Date getDataDevolucao() {
         return dataDevolucao;
     }
+    
+    public void setDataDevolucao(Date dataDevolucao) {
+        this.dataDevolucao = dataDevolucao;
+    }
 
     public String getStatus() {
         return status;
@@ -106,6 +110,7 @@ public class Emprestimo {
         calcularMulta();
         return multa;
     }
+    
 
     @Override
     public String toString() {

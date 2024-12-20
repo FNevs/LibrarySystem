@@ -6,8 +6,11 @@ import observer.*;
 import strategy.*;
 import service.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -197,12 +200,35 @@ private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioS
 }
 
 
-    private static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo historicoEmprestimo) {
-        System.out.print("Digite o título do item devolvido: ");
-        String titulo = scanner.nextLine();
-        historicoEmprestimo.registrarDevolucao(titulo);
-        System.out.println("Devolução registrada!");
+public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo historicoEmprestimo) {
+    System.out.print("Digite o título do item devolvido: ");
+    String tituloItem = scanner.nextLine();
+
+    // Solicite que o usuário insira a data de devolução
+    System.out.print("Digite a data de devolução (formato: dd/MM/yyyy): ");
+    String dataDevolucaoStr = scanner.nextLine();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    Date dataDevolucao = null;
+
+    try {
+        dataDevolucao = dateFormat.parse(dataDevolucaoStr);
+    } catch (ParseException e) {
+        System.out.println("Data inválida. A devolução não foi registrada.");
+        return;
     }
+
+    // Encontre o item no histórico de empréstimos
+    Emprestimo emprestimo = historicoEmprestimo.buscarEmprestimoPorTitulo(tituloItem);
+    if (emprestimo != null) {
+        // Defina a data de devolução corretamente
+        emprestimo.setDataDevolucao(dataDevolucao);
+        historicoEmprestimo.registrarDevolucao(emprestimo); // Passa o objeto Emprestimo
+        System.out.println("Devolução registrada! Data de devolução: " + emprestimo.getDataDevolucao());
+    } else {
+        System.out.println("Item não encontrado no histórico de empréstimos.");
+    }
+}
+
 
     private static void fazerReserva(Scanner scanner, UsuarioService usuarioService,
                                      BibliotecaService bibliotecaService) {

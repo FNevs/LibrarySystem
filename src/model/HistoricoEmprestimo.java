@@ -14,9 +14,10 @@ public class HistoricoEmprestimo {
         historico.add(emprestimo);
     }
 
-    public void registrarDevolucao(String titulo) {
-        historico.removeIf(emprestimo -> emprestimo.getItem().getTitulo().equalsIgnoreCase(titulo));
+    public void registrarDevolucao(Emprestimo emprestimo) {
+        historico.removeIf(h -> h.getItem().getTitulo().equalsIgnoreCase(emprestimo.getItem().getTitulo()));
     }
+    
 
     public Emprestimo buscarEmprestimoPorTitulo(String titulo) {
         for (Emprestimo emprestimo : historico) {
