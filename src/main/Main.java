@@ -6,6 +6,7 @@ import observer.*;
 import strategy.*;
 import service.*;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -157,28 +158,44 @@ public class Main {
         }
     }
 
-    private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioService,
-                                            BibliotecaService bibliotecaService, HistoricoEmprestimo historicoEmprestimo) {
-        System.out.print("Digite a matrícula do usuário: ");
-        String matricula = scanner.nextLine();
-        Usuario usuario = usuarioService.consultarUsuario(matricula);
+private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioService,
+                                         BibliotecaService bibliotecaService, HistoricoEmprestimo historicoEmprestimo) {
+    System.out.print("Digite a matrícula do usuário: ");
+    String matricula = scanner.nextLine();
+    Usuario usuario = usuarioService.consultarUsuario(matricula);
 
-        System.out.print("Digite o título do item: ");
-        String titulo = scanner.nextLine();
-        ItemBiblioteca item = bibliotecaService.buscarPorTitulo(titulo).get(0);
-
-        EmprestimoStrategy strategy;
-        if (usuario.getTipo().equalsIgnoreCase("Aluno")) {
-            strategy = new AlunoEmprestimoStrategy();
-        } else {
-            strategy = new ProfessorEmprestimoStrategy();
-        }
-
-        Emprestimo emprestimo = new Emprestimo(usuario, item, strategy);
-        historicoEmprestimo.registrarEmprestimo(emprestimo);
-
-        System.out.println("Empréstimo registrado! Data de devolução: " + emprestimo.getDataDevolucao());
+    // Verifica se o usuário existe
+    if (usuario == null) {
+        System.out.println("Usuário não encontrado.");
+        return;
     }
+
+    System.out.print("Digite o título do item: ");
+    String titulo = scanner.nextLine();
+    
+    // Verifica se o item existe no catálogo
+    List<ItemBiblioteca> itensEncontrados = bibliotecaService.buscarPorTitulo(titulo);
+    if (itensEncontrados.isEmpty()) {
+        System.out.println("Item não encontrado no catálogo.");
+        return;
+    }
+
+    // Pega o primeiro item encontrado (ou outros critérios, caso necessário)
+    ItemBiblioteca item = itensEncontrados.get(0);
+
+    EmprestimoStrategy strategy;
+    if (usuario.getTipo().equalsIgnoreCase("Aluno")) {
+        strategy = new AlunoEmprestimoStrategy();
+    } else {
+        strategy = new ProfessorEmprestimoStrategy();
+    }
+
+    Emprestimo emprestimo = new Emprestimo(usuario, item, strategy);
+    historicoEmprestimo.registrarEmprestimo(emprestimo);
+
+    System.out.println("Empréstimo registrado! Data de devolução: " + emprestimo.getDataDevolucao());
+}
+
 
     private static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo historicoEmprestimo) {
         System.out.print("Digite o título do item devolvido: ");
