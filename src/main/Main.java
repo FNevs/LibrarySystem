@@ -2,6 +2,7 @@ package main;
 
 import factory.*;
 import model.*;
+import model.ItemBiblioteca;
 import observer.*;
 import strategy.*;
 
