@@ -15,18 +15,22 @@ public class HistoricoEmprestimo {
     }
 
     public void registrarDevolucao(String titulo) {
+        historico.removeIf(emprestimo -> emprestimo.getItem().getTitulo().equalsIgnoreCase(titulo));
+    }
+
+    public Emprestimo buscarEmprestimoPorTitulo(String titulo) {
         for (Emprestimo emprestimo : historico) {
-            if (emprestimo.getItem().getTitulo().equals(titulo)) {
-                historico.remove(emprestimo);
-                break;
+            if (emprestimo.getItem().getTitulo().equalsIgnoreCase(titulo)) {
+                return emprestimo;
             }
         }
+        return null; // Retorna null caso não encontre
     }
 
     public List<Emprestimo> consultarHistoricoPorUsuario(Usuario usuario) {
         List<Emprestimo> historicoUsuario = new ArrayList<>();
         for (Emprestimo emprestimo : historico) {
-            if (emprestimo.getUsuario().getMatricula().equals(usuario)) {
+            if (emprestimo.getUsuario().getMatricula().equals(usuario.getMatricula())) {
                 historicoUsuario.add(emprestimo);
             }
         }

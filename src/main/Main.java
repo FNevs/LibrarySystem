@@ -6,90 +6,111 @@ import observer.*;
 import strategy.*;
 import service.*;
 
+import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
+            UsuarioService usuarioService = new UsuarioService();
+            BibliotecaService bibliotecaService = new BibliotecaService();
+            HistoricoEmprestimo historicoEmprestimo = new HistoricoEmprestimo();
 
-        // Serviços e variáveis principais
-        UsuarioService usuarioService = new UsuarioService();
-        BibliotecaService bibliotecaService = new BibliotecaService();
-        HistoricoEmprestimo historicoEmprestimo = new HistoricoEmprestimo();
+            boolean running = true;
 
-        boolean running = true;
+            while (running) {
+                exibirMenu();
+                int opcao = lerOpcao(scanner);
 
-        while (running) {
-            System.out.println("\n==== Menu do Sistema ====");
-            System.out.println("1. Cadastrar Usuário");
-            System.out.println("2. Gerenciar Itens da Biblioteca");
-            System.out.println("3. Registrar Empréstimo");
-            System.out.println("4. Registrar Devolução");
-            System.out.println("5. Fazer Reserva de Item");
-            System.out.println("6. Consultar Histórico de Empréstimos");
-            System.out.println("7. Buscar Item no Catálogo");
-            System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
-
-            switch (opcao) {
-                case 1:
-                    cadastrarUsuario(scanner, usuarioService);
-                    break;
-                case 2:
-                    gerenciarItens(scanner, bibliotecaService);
-                    break;
-                case 3:
-                    registrarEmprestimo(scanner, usuarioService, bibliotecaService, historicoEmprestimo);
-                    break;
-                case 4:
-                    registrarDevolucao(scanner, historicoEmprestimo);
-                    break;
-                case 5:
-                    fazerReserva(scanner, usuarioService, bibliotecaService);
-                    break;
-                case 6:
-                    consultarHistorico(scanner, usuarioService, historicoEmprestimo);
-                    break;
-                case 7:
-                    buscarItem(scanner, bibliotecaService);
-                    break;
-                case 0:
-                    running = false;
-                    System.out.println("Encerrando o sistema...");
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
+                switch (opcao) {
+                    case 1:
+                        cadastrarUsuario(scanner, usuarioService);
+                        break;
+                    case 2:
+                        gerenciarItens(scanner, bibliotecaService);
+                        break;
+                    case 3:
+                        registrarEmprestimo(scanner, usuarioService, bibliotecaService, historicoEmprestimo);
+                        break;
+                    case 4:
+                        registrarDevolucao(scanner, historicoEmprestimo);
+                        break;
+                    case 5:
+                        fazerReserva(scanner, usuarioService, bibliotecaService);
+                        break;
+                    case 6:
+                        consultarHistorico(scanner, usuarioService, historicoEmprestimo);
+                        break;
+                    case 7:
+                        buscarItem(scanner, bibliotecaService);
+                        break;
+                    case 0:
+                        running = false;
+                        System.out.println("Encerrando o sistema...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida! Tente novamente.");
+                        break;
+                }
             }
         }
+    }
 
-        scanner.close();
+    private static void exibirMenu() {
+        System.out.println("\n==== Menu do Sistema ====");
+        System.out.println("1. Cadastrar Usuário");
+        System.out.println("2. Gerenciar Itens da Biblioteca");
+        System.out.println("3. Registrar Empréstimo");
+        System.out.println("4. Registrar Devolução");
+        System.out.println("5. Fazer Reserva de Item");
+        System.out.println("6. Consultar Histórico de Empréstimos");
+        System.out.println("7. Buscar Item no Catálogo");
+        System.out.println("0. Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private static int lerOpcao(Scanner scanner) {
+        try {
+            int opcao = scanner.nextInt();
+            scanner.nextLine();  
+            return opcao;
+        } catch (InputMismatchException e) {
+            System.out.println("Entrada inválida! Por favor, insira um número.");
+            scanner.nextLine();  
+            return -1;
+        }
     }
 
     private static void cadastrarUsuario(Scanner scanner, UsuarioService usuarioService) {
-        System.out.print("Digite o nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Digite a matrícula/função: ");
-        String matricula = scanner.nextLine();
-        System.out.print("Digite o telefone: ");
-        String telefone = scanner.nextLine();
-        System.out.print("Digite o tipo (Aluno/Professor/Funcionário): ");
-        String tipo = scanner.nextLine();
-
-        Usuario usuario = new Usuario(nome, matricula, telefone, tipo);
-        if (tipo.equalsIgnoreCase("Aluno")) {
-            System.out.print("Digite o curso: ");
-            String curso = scanner.nextLine();
-            usuario.setCurso(curso);
-        } else {
-            System.out.print("Digite o departamento: ");
-            String departamento = scanner.nextLine();
-            usuario.setDepartamento(departamento);
+        try {
+            scanner.nextLine();  
+            System.out.print("Digite o nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Digite a matrícula/função: ");
+            String matricula = scanner.nextLine();
+            System.out.print("Digite o telefone: ");
+            String telefone = scanner.nextLine();
+            System.out.print("Digite o tipo (Aluno/Professor/Funcionário): ");
+            String tipo = scanner.nextLine();
+    
+            Usuario usuario = new Usuario(nome, matricula, telefone, tipo);
+            if (tipo.equalsIgnoreCase("Aluno")) {
+                System.out.print("Digite o curso: ");
+                String curso = scanner.nextLine();
+                usuario.setCurso(curso);
+            } else {
+                System.out.print("Digite o departamento: ");
+                String departamento = scanner.nextLine();
+                usuario.setDepartamento(departamento);
+            }
+    
+            usuarioService.cadastrarUsuario(usuario);
+            System.out.println("Usuário cadastrado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar usuário: " + e.getMessage());
         }
-
-        usuarioService.cadastrarUsuario(usuario);
-        System.out.println("Usuário cadastrado com sucesso!");
     }
 
     private static void gerenciarItens(Scanner scanner, BibliotecaService bibliotecaService) {
@@ -99,9 +120,60 @@ public class Main {
         System.out.println("3. Excluir Item");
         System.out.println("4. Consultar Itens");
         System.out.print("Escolha uma opção: ");
-        int opcao = scanner.nextInt();
-        scanner.nextLine(); // Limpar buffer
+    
+        int opcao = lerOpcao(scanner);
+        scanner.nextLine(); 
+    
+        try {
+            switch (opcao) {
+                case 1:
+                    adicionarItem(scanner, bibliotecaService);
+                    break;  
+                case 2:
+                    atualizarItem(scanner, bibliotecaService);
+                    break;  
+                case 3:
+                    excluirItem(scanner, bibliotecaService);
+                    break;  
+                case 4:
+                    consultarItens(bibliotecaService);
+                    break;  
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao gerenciar itens: " + e.getMessage());
+        }
+    }
+    
+    private static void adicionarItem(Scanner scanner, BibliotecaService bibliotecaService) {
+        System.out.print("Digite o título: ");
+        String titulo = scanner.nextLine().toLowerCase();  
+    
+        System.out.print("Digite o autor: ");
+        String autor = scanner.nextLine();
+    
+        System.out.print("Digite o tipo (Livro/Periódico): ");
+        String tipo = scanner.nextLine().toLowerCase(); 
+    
+        System.out.print("Digite a área do item: ");
+        String area = scanner.nextLine().toUpperCase(); 
+        
+        try {
+            ItemBiblioteca item = ItemBibliotecaFactory.criaItem(titulo, autor, tipo, area);
+            bibliotecaService.adicionarItem(item);
+            System.out.println("Item adicionado ao catálogo!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao adicionar item: " + e.getMessage());
+        }
+    }
+    
+    
+    private static void atualizarItem(Scanner scanner, BibliotecaService bibliotecaService) {
+        System.out.print("Digite o título do item a ser atualizado: ");
+        String titulo = scanner.nextLine().toLowerCase();  
 
+<<<<<<< HEAD
         switch (opcao) {
             case 1:
                 System.out.print("Digite o título: ");
@@ -154,41 +226,109 @@ public class Main {
                 break;
             default:
                 System.out.println("Opção inválida!");
+=======
+        var itens = bibliotecaService.getItens().stream()
+                .filter(item -> item.getTitulo().toLowerCase().equals(titulo))  
+                .collect(Collectors.toList());
+
+        if (itens.isEmpty()) {
+            System.out.println("Item não encontrado.");
+            return;
+        }
+
+        ItemBiblioteca item = itens.get(0); 
+        System.out.print("Digite o novo título: ");
+        String novoTitulo = scanner.nextLine();
+        item.setTitulo(novoTitulo);
+
+        System.out.print("Disponibilidade (true/false): ");
+        boolean disponibilidade = scanner.nextBoolean();
+        item.setDisponibilidade(disponibilidade);
+
+        bibliotecaService.atualizarItem(item);
+        System.out.println("Item atualizado!");
+    }
+
+    private static void excluirItem(Scanner scanner, BibliotecaService bibliotecaService) {
+        System.out.print("Digite o título do item a ser excluído: ");
+        String titulo = scanner.nextLine();
+
+        ItemBiblioteca item = bibliotecaService.getItens().stream()
+                .filter(i -> i.getTitulo().equalsIgnoreCase(titulo))
+                .findFirst()
+                .orElse(null);
+
+        if (item != null) {
+            bibliotecaService.excluirItem(item);
+            System.out.println("Item excluído com sucesso.");
+        } else {
+            System.out.println("Item com o título '" + titulo + "' não encontrado.");
+>>>>>>> d2252d0 (implementação para calcular o juros do emprestimo)
         }
     }
 
-    private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioService,
-                                            BibliotecaService bibliotecaService, HistoricoEmprestimo historicoEmprestimo) {
+    private static void consultarItens(BibliotecaService bibliotecaService) {
+        System.out.println("Itens no catálogo:");
+        bibliotecaService.getItens().forEach(it -> System.out.println("- " + it.getTitulo()));
+    }
+    
+
+    private static void registrarEmprestimo(Scanner scanner, UsuarioService usuarioService, BibliotecaService bibliotecaService, HistoricoEmprestimo historicoEmprestimo) {
         System.out.print("Digite a matrícula do usuário: ");
         String matricula = scanner.nextLine();
         Usuario usuario = usuarioService.consultarUsuario(matricula);
-
+    
         System.out.print("Digite o título do item: ");
         String titulo = scanner.nextLine();
-        ItemBiblioteca item = bibliotecaService.buscarPorTitulo(titulo).get(0);
+        
+      
+        var itens = bibliotecaService.buscarPorTitulo(titulo);
+        if (itens.isEmpty()) {
+            System.out.println("Item não encontrado no catálogo.");
+            return;  
+        }
+    
 
+        ItemBiblioteca item = itens.get(0);
+    
         EmprestimoStrategy strategy;
         if (usuario.getTipo().equalsIgnoreCase("Aluno")) {
             strategy = new AlunoEmprestimoStrategy();
         } else {
             strategy = new ProfessorEmprestimoStrategy();
         }
-
+    
         Emprestimo emprestimo = new Emprestimo(usuario, item, strategy);
         historicoEmprestimo.registrarEmprestimo(emprestimo);
-
+    
         System.out.println("Empréstimo registrado! Data de devolução: " + emprestimo.getDataDevolucao());
     }
+    
+    
 
     private static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo historicoEmprestimo) {
         System.out.print("Digite o título do item devolvido: ");
         String titulo = scanner.nextLine();
-        historicoEmprestimo.registrarDevolucao(titulo);
+    
+        Emprestimo emprestimo = historicoEmprestimo.buscarEmprestimoPorTitulo(titulo);
+        if (emprestimo == null) {
+            System.out.println("Nenhum empréstimo encontrado para o item: " + titulo);
+            return;
+        }
+    
+        
+        Date dataDevolucaoReal = new Date(); 
+        double multa = emprestimo.calcularMulta(dataDevolucaoReal); 
+    
         System.out.println("Devolução registrada!");
+        System.out.println("Data esperada de devolução: " + emprestimo.getDataDevolucao());
+        System.out.println("Data real de devolução: " + dataDevolucaoReal);
+        System.out.println("Multa aplicada: R$ " + multa);
+    
+        historicoEmprestimo.registrarDevolucao(titulo);
     }
 
-    private static void fazerReserva(Scanner scanner, UsuarioService usuarioService,
-                                     BibliotecaService bibliotecaService) {
+    private static void fazerReserva(Scanner scanner, UsuarioService usuarioService, BibliotecaService bibliotecaService) {
         System.out.print("Digite a matrícula do usuário: ");
         String matricula = scanner.nextLine();
         Usuario usuario = usuarioService.consultarUsuario(matricula);
@@ -202,8 +342,7 @@ public class Main {
         System.out.println("Reserva registrada! Você será notificado quando o item estiver disponível.");
     }
 
-    private static void consultarHistorico(Scanner scanner, UsuarioService usuarioService,
-                                           HistoricoEmprestimo historicoEmprestimo) {
+    private static void consultarHistorico(Scanner scanner, UsuarioService usuarioService, HistoricoEmprestimo historicoEmprestimo) {
         System.out.print("Digite a matrícula do usuário: ");
         String matricula = scanner.nextLine();
         Usuario usuario = usuarioService.consultarUsuario(matricula);

@@ -3,45 +3,59 @@ package service;
 import factory.ItemBiblioteca;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BibliotecaService {
-    private List<ItemBiblioteca> catalogo = new ArrayList<>();
+    private final List<ItemBiblioteca> catalogo = new ArrayList<>();
 
     public void adicionarItem(ItemBiblioteca item) {
+        if (item == null) {
+            throw new IllegalArgumentException("O item não pode ser nulo.");
+        }
         catalogo.add(item);
     }
 
     public void atualizarItem(ItemBiblioteca item) {
+        if (item == null) {
+            throw new IllegalArgumentException("O item não pode ser nulo.");
+        }
         for (int i = 0; i < catalogo.size(); i++) {
-            if (catalogo.get(i).getTitulo().equals(item.getTitulo())) {
+            if (catalogo.get(i).getTitulo().equalsIgnoreCase(item.getTitulo())) {
                 catalogo.set(i, item);
                 return;
             }
         }
+        throw new IllegalArgumentException("Item não encontrado no catálogo.");
     }
 
-    public void excluirItem(String titulo) {
-        catalogo.removeIf(i -> i.getTitulo().equals(titulo));
+    public void excluirItem(ItemBiblioteca item) {
+        if (item == null) {
+            throw new IllegalArgumentException("O item não pode ser nulo.");
+        }
+        boolean removido = catalogo.remove(item);
+        if (!removido) {
+            throw new IllegalArgumentException("Item não encontrado no catálogo.");
+        }
     }
 
     public List<ItemBiblioteca> buscarPorTitulo(String titulo) {
-        List<ItemBiblioteca> resultado = new ArrayList<>();
-        for (ItemBiblioteca item : catalogo) {
-            if (item.getTitulo().contains(titulo)) {
-                resultado.add(item);
-            }
+        if (titulo == null || titulo.isEmpty()) {
+            throw new IllegalArgumentException("O título não pode ser nulo ou vazio.");
         }
-        return resultado;
+        String tituloLower = titulo.toLowerCase().trim(); 
+        System.out.println("Buscando título: " + tituloLower); 
+        return buscarPorCriterio(item -> item.getTitulo().toLowerCase().contains(tituloLower)); 
     }
+    
+    
 
     public List<ItemBiblioteca> buscarPorAutor(String autor) {
-        List<ItemBiblioteca> resultado = new ArrayList<>();
-        for (ItemBiblioteca item : catalogo) {
-            if (item.getAutor().contains(autor)) {
-                resultado.add(item);
-            }
+        if (autor == null || autor.isEmpty()) {
+            throw new IllegalArgumentException("O autor não pode ser nulo ou vazio.");
         }
-        return resultado;
+        String autorLower = autor.toLowerCase(); 
+        return buscarPorCriterio(item -> item.getAutor().toLowerCase().contains(autorLower)); 
     }
     public List<ItemBiblioteca> buscarPorTipo(String tipo) {
         List<ItemBiblioteca> resultado = new ArrayList<>();
@@ -62,8 +76,12 @@ public class BibliotecaService {
         return resultado;
     }
 
-    // Adicionando o método getItens() para retornar todos os itens do catálogo
     public List<ItemBiblioteca> getItens() {
-        return catalogo;
+        return new ArrayList<>(catalogo); 
+    }
+
+    // Método auxiliar para busca com critério específico
+    private List<ItemBiblioteca> buscarPorCriterio(Predicate<ItemBiblioteca> criterio) {
+        return catalogo.stream().filter(criterio).collect(Collectors.toList());
     }
 }

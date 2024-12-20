@@ -40,6 +40,8 @@ public class Emprestimo {
             calcularMulta();
             this.item.setDisponibilidade(true);
             System.out.println("Item devolvido com sucesso.");
+            
+            verificarAtraso();
             if (multa > 0) {
                 System.out.println("Multa aplicada: R$ " + multa);
             }
@@ -47,21 +49,37 @@ public class Emprestimo {
             System.out.println("Não é possível devolver um empréstimo que já foi finalizado.");
         }
     }
+    
 
     public void verificarAtraso() {
-        if (new Date().after(dataDevolucao) && "Ativo".equals(status)) {
+        if ("Ativo".equals(status) && new Date().after(dataDevolucao)) {
             this.status = "Atrasado";
-            calcularMulta();
+            calcularMulta();  
             System.out.println("O empréstimo está atrasado! Multa até o momento: R$ " + multa);
         }
     }
+    
 
-    private void calcularMulta() {
-        if (dataDevolvido != null && dataDevolvido.after(dataDevolucao)) {
-            long diferencaDias = (dataDevolvido.getTime() - dataDevolucao.getTime()) / (1000 * 60 * 60 * 24);
-            multa = diferencaDias * 2.0; // Multa de R$ 2,00 por dia de atraso
+    public double calcularMulta() {
+        Date dataReferencia = (dataDevolvido != null) ? dataDevolvido : new Date();
+        if (dataReferencia.after(dataDevolucao)) {
+            long diferencaDias = (dataReferencia.getTime() - dataDevolucao.getTime()) / (1000 * 60 * 60 * 24);
+            multa = diferencaDias * 2.0;  
+        } else {
+            multa = 0.0;
         }
+        return multa;
     }
+    
+    public double calcularMulta(Date dataReferencia) {
+        if (dataReferencia.after(dataDevolucao)) {
+            long diferencaDias = (dataReferencia.getTime() - dataDevolucao.getTime()) / (1000 * 60 * 60 * 24);
+            return diferencaDias * 2.0;
+        }
+        return 0.0;
+    }
+    
+    
 
     // Getters
     public Usuario getUsuario() {
@@ -85,6 +103,7 @@ public class Emprestimo {
     }
 
     public double getMulta() {
+        calcularMulta();
         return multa;
     }
 
