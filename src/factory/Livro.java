@@ -4,8 +4,8 @@ import observer.Observer;
 import model.ItemBiblioteca;
 
 public class Livro extends ItemBiblioteca {
-    public Livro(String titulo, String autor) {
-        super(titulo, autor);
+        public Livro(String titulo, String autor) {
+            super(titulo, autor);
     }
 
     @Override

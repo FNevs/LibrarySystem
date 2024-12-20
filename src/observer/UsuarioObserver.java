@@ -11,8 +11,12 @@ public class UsuarioObserver implements Observer {
     }
 
     @Override
-    public void update(ItemBiblioteca item) {
-        System.out.println("Notificação para " + usuario.getNome() +
-                ": O item " + item.getTitulo() + " alterou sua disponibilidade.");
+public void update(ItemBiblioteca item) {
+    System.out.println("Notificação para " + usuario.getNome() + ": O item " + item.getTitulo()
+        + " alterou sua disponibilidade.");
+    if (!item.isDisponivel()) {
+        System.out.println("Atenção: você reservou este item!");
     }
+}
+
 }

@@ -14,6 +14,10 @@ public class Periodico extends ItemBiblioteca {
     public String getEdicao() {
         return edicao;
     }
+    
+    public void setEdicao(String edicao) {
+        this.edicao = edicao;
+    }
 
     @Override
     public String getTipo() {
