@@ -1,6 +1,6 @@
 package observer;
 
-import model.ItemBiblioteca;
+import factory.ItemBiblioteca;
 
 public interface Observer {
     void update(ItemBiblioteca item);

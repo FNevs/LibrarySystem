@@ -1,5 +1,5 @@
 package model;
-
+import factory.ItemBiblioteca;
 import strategy.EmprestimoStrategy;
 
 import java.util.Date;

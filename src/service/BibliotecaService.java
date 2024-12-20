@@ -1,6 +1,6 @@
 package service;
 
-import model.ItemBiblioteca;
+import factory.ItemBiblioteca;
 import java.util.ArrayList;
 import java.util.List;
 

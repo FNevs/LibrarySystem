@@ -2,7 +2,7 @@ package main;
 
 import factory.*;
 import model.*;
-import model.ItemBiblioteca;
+import factory.ItemBiblioteca;
 import observer.*;
 import strategy.*;
 import service.*;
@@ -111,17 +111,16 @@ public class Main {
                 String autor = scanner.nextLine();
                 System.out.print("Digite o tipo (Livro/Periódico): ");
                 String tipo = scanner.nextLine();
+                System.out.print("Digite a area do item: ");
+                String area = scanner.nextLine();
 
                 ItemBiblioteca item;
                 if (tipo.equalsIgnoreCase("Livro")) {
-                    LivroFactory livroFactory = new LivroFactory();
-                    item = livroFactory.criarItem(titulo, autor);
+                    item = ItemBibliotecaFactory.criaItem(titulo, autor, tipo, area);
+                    
                 } else {
-                    PeriodicoFactory periodicoFactory = new PeriodicoFactory();
-                    System.out.print("Digite a edição: ");
-                    String edicao = scanner.nextLine();
-                    item = periodicoFactory.criarItem(titulo, autor);
-                    ((Periodico) item).setEdicao(edicao);
+                    item = ItemBibliotecaFactory.criaItem(titulo, autor, tipo, area);
+                                       
                 }
 
                 bibliotecaService.adicionarItem(item);

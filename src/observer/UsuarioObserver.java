@@ -1,6 +1,6 @@
 package observer;
 
-import model.ItemBiblioteca;
+import factory.ItemBiblioteca;
 import model.Usuario;
 
 public class UsuarioObserver implements Observer {
