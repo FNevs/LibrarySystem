@@ -200,6 +200,7 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
     System.out.print("Digite o título do item devolvido: ");
     String tituloItem = scanner.nextLine();
 
+    // Solicite que o usuário insira a data de devolução
     System.out.print("Digite a data de devolução (formato: dd/MM/yyyy): ");
     String dataDevolucaoStr = scanner.nextLine();
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -212,28 +213,55 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
         return;
     }
 
+    // Encontre o item no histórico de empréstimos
     Emprestimo emprestimo = historicoEmprestimo.buscarEmprestimoPorTitulo(tituloItem);
     if (emprestimo != null) {
-        Date dataPrevistaDevolucao = emprestimo.getDataDevolucao();
+        // Obter o usuário e a estratégia de empréstimo (aluno ou professor)
+        Usuario usuario = emprestimo.getUsuario();
+        EmprestimoStrategy estrategia = null;
 
-        long diferencaEmMillis = dataDevolucao.getTime() - dataPrevistaDevolucao.getTime();
+        // Usando o campo 'tipo' para determinar a estratégia
+        if ("Aluno".equalsIgnoreCase(usuario.getTipo())) {
+            estrategia = new AlunoEmprestimoStrategy();
+        } else if ("Professor".equalsIgnoreCase(usuario.getTipo())) {
+            estrategia = new ProfessorEmprestimoStrategy();
+        }
+
+        if (estrategia == null) {
+            System.out.println("Tipo de usuário desconhecido.");
+            return;
+        }
+
+        // Calcula o prazo de devolução
+        Date prazoDevolucao = estrategia.calcularPrazo(emprestimo.getDataEmprestimo());
+
+        // Verifica se houve atraso
+        long diferencaEmMillis = dataDevolucao.getTime() - prazoDevolucao.getTime();
         long diasAtraso = diferencaEmMillis / (1000 * 60 * 60 * 24);  // Converte milissegundos para dias
 
+        // Taxa de multa por dia de atraso (diferente para aluno e professor)
+        double multa = 0;
         if (diasAtraso > 0) {
-            double taxaMulta = 1.50;
-            double multa = diasAtraso * taxaMulta;
+            if ("Aluno".equalsIgnoreCase(usuario.getTipo())) {
+                multa = diasAtraso * 2.00; // Multa maior para alunos
+            } else if ("Professor".equalsIgnoreCase(usuario.getTipo())) {
+                multa = diasAtraso * 1.00; // Multa menor para professores
+            }
             System.out.println("O item está " + diasAtraso + " dias atrasado. Multa: R$ " + multa);
         } else {
             System.out.println("Devolução dentro do prazo. Sem multa.");
         }
 
+        // Definir a data de devolução real e registrar
         emprestimo.setDataDevolucao(dataDevolucao);
-        historicoEmprestimo.registrarDevolucao(emprestimo); 
+        historicoEmprestimo.registrarDevolucao(emprestimo); // Passa o objeto Emprestimo
         System.out.println("Devolução registrada! Data de devolução: " + emprestimo.getDataDevolucao());
     } else {
         System.out.println("Item não encontrado no histórico de empréstimos.");
     }
 }
+
+
 
 
     private static void fazerReserva(Scanner scanner, UsuarioService usuarioService,
