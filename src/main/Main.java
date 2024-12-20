@@ -130,6 +130,9 @@ public class Main {
                 System.out.print("Digite o título do item a ser atualizado: ");
                 String tituloAtualizar = scanner.nextLine();
                 ItemBiblioteca itemAtualizar = bibliotecaService.buscarPorTitulo(tituloAtualizar).get(0);
+                System.out.print("Digite o novo titulo: ");
+                String novotitulo = scanner.nextLine();
+                itemAtualizar.setTitulo(novotitulo);
                 System.out.print("Disponibilidade (true/false): ");
                 boolean disponibilidade = scanner.nextBoolean();
                 itemAtualizar.setDisponibilidade(disponibilidade);

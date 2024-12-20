@@ -7,6 +7,8 @@ import java.util.List;
 
 public abstract class ItemBiblioteca {
     protected String titulo;
+    
+
     protected String autor;
     protected String tipo;
     protected String area;
@@ -25,6 +27,9 @@ public abstract class ItemBiblioteca {
       
     public String getTitulo() {
         return titulo;
+    }
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getAutor() {

@@ -23,6 +23,9 @@ public class Livro extends ItemBiblioteca{
      public String getTitulo() {
         return titulo;
     }
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
     public String getAutor() {
         return autor;
     }
