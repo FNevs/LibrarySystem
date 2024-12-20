@@ -200,7 +200,6 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
     System.out.print("Digite o título do item devolvido: ");
     String tituloItem = scanner.nextLine();
 
-    // Solicite que o usuário insira a data de devolução
     System.out.print("Digite a data de devolução (formato: dd/MM/yyyy): ");
     String dataDevolucaoStr = scanner.nextLine();
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -213,14 +212,11 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
         return;
     }
 
-    // Encontre o item no histórico de empréstimos
     Emprestimo emprestimo = historicoEmprestimo.buscarEmprestimoPorTitulo(tituloItem);
     if (emprestimo != null) {
-        // Obter o usuário e a estratégia de empréstimo (aluno ou professor)
         Usuario usuario = emprestimo.getUsuario();
         EmprestimoStrategy estrategia = null;
 
-        // Usando o campo 'tipo' para determinar a estratégia
         if ("Aluno".equalsIgnoreCase(usuario.getTipo())) {
             estrategia = new AlunoEmprestimoStrategy();
         } else if ("Professor".equalsIgnoreCase(usuario.getTipo())) {
@@ -232,14 +228,11 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
             return;
         }
 
-        // Calcula o prazo de devolução
         Date prazoDevolucao = estrategia.calcularPrazo(emprestimo.getDataEmprestimo());
 
-        // Verifica se houve atraso
         long diferencaEmMillis = dataDevolucao.getTime() - prazoDevolucao.getTime();
         long diasAtraso = diferencaEmMillis / (1000 * 60 * 60 * 24);  // Converte milissegundos para dias
 
-        // Taxa de multa por dia de atraso (diferente para aluno e professor)
         double multa = 0;
         if (diasAtraso > 0) {
             if ("Aluno".equalsIgnoreCase(usuario.getTipo())) {
@@ -252,9 +245,8 @@ public static void registrarDevolucao(Scanner scanner, HistoricoEmprestimo histo
             System.out.println("Devolução dentro do prazo. Sem multa.");
         }
 
-        // Definir a data de devolução real e registrar
         emprestimo.setDataDevolucao(dataDevolucao);
-        historicoEmprestimo.registrarDevolucao(emprestimo); // Passa o objeto Emprestimo
+        historicoEmprestimo.registrarDevolucao(emprestimo); 
         System.out.println("Devolução registrada! Data de devolução: " + emprestimo.getDataDevolucao());
     } else {
         System.out.println("Item não encontrado no histórico de empréstimos.");

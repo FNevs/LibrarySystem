@@ -30,9 +30,9 @@ public class Emprestimo {
 
             // Verifica o tipo de usuário e aplica a multa correspondente
             if ("Aluno".equalsIgnoreCase(usuario.getTipo())) {
-                valorMulta = diasAtraso * 0.5; // Multa de R$0,50 por dia para alunos
+                valorMulta = diasAtraso * 2.00; 
             } else if ("Professor".equalsIgnoreCase(usuario.getTipo())) {
-                valorMulta = diasAtraso * 1.0; // Multa de R$1,00 por dia para professores
+                valorMulta = diasAtraso * 1.00; 
             }
 
             return valorMulta;

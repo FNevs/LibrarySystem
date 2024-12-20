@@ -5,8 +5,8 @@ public class Usuario {
     private String matricula;
     private String telefone;
     private String tipo;
-    private String curso;       // Campo para alunos
-    private String departamento; // Campo para professores e funcionários
+    private String curso;      
+    private String departamento; 
 
     public Usuario(String nome, String matricula, String telefone, String tipo) {
         this.nome = nome;
