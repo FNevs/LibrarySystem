@@ -43,6 +43,24 @@ public class BibliotecaService {
         }
         return resultado;
     }
+    public List<ItemBiblioteca> buscarPorTipo(String tipo) {
+        List<ItemBiblioteca> resultado = new ArrayList<>();
+        for (ItemBiblioteca item : catalogo) {
+            if (item.getTipo().contains(tipo)) {
+                resultado.add(item);
+            }
+        }
+        return resultado;
+    }
+    public List<ItemBiblioteca> buscarPorArea(String area) {
+        List<ItemBiblioteca> resultado = new ArrayList<>();
+        for (ItemBiblioteca item : catalogo) {
+            if (item.getArea().contains(area)) {
+                resultado.add(item);
+            }
+        }
+        return resultado;
+    }
 
     // Adicionando o método getItens() para retornar todos os itens do catálogo
     public List<ItemBiblioteca> getItens() {

@@ -2,7 +2,6 @@ package main;
 
 import factory.*;
 import model.*;
-import factory.ItemBiblioteca;
 import observer.*;
 import strategy.*;
 import service.*;
@@ -109,18 +108,16 @@ public class Main {
                 String titulo = scanner.nextLine();
                 System.out.print("Digite o autor: ");
                 String autor = scanner.nextLine();
-                System.out.print("Digite o tipo (Livro/Periódico): ");
+                System.out.print("Digite o tipo (Livro/Periódico/Jornal,MaterialAudioVisual): ");
                 String tipo = scanner.nextLine();
                 System.out.print("Digite a area do item: ");
                 String area = scanner.nextLine();
 
                 ItemBiblioteca item;
-                if (tipo.equalsIgnoreCase("Livro")) {
+                if (tipo.equalsIgnoreCase("Livro") || tipo.equalsIgnoreCase("Periodico") || tipo.equalsIgnoreCase("Jornal") || tipo.equalsIgnoreCase("MaterialAudioVisual") || tipo.equalsIgnoreCase("Material Audio Visual") || tipo.equalsIgnoreCase("Material AudioVisual") || tipo.equalsIgnoreCase("Material Audio Visual")) {
                     item = ItemBibliotecaFactory.criaItem(titulo, autor, tipo, area);
-                    
                 } else {
-                    item = ItemBibliotecaFactory.criaItem(titulo, autor, tipo, area);
-                                       
+                    throw new IllegalArgumentException("Tipo de item inválido!");
                 }
 
                 bibliotecaService.adicionarItem(item);
@@ -147,7 +144,13 @@ public class Main {
                 break;
             case 4:
                 System.out.println("Itens no catálogo:");
-                bibliotecaService.getItens().forEach(it -> System.out.println("- " + it.getTitulo()));
+                bibliotecaService.getItens().forEach(it -> {
+                System.out.println("Titulo: " + it.getTitulo());
+                System.out.println("Autor: " + it.getAutor());
+                System.out.println("Tipo: " + it.getTipo());
+                System.out.println("Area: " + it.getArea());
+                System.out.println("--------------------");
+                });
                 break;
             default:
                 System.out.println("Opção inválida!");
@@ -216,6 +219,33 @@ public class Main {
         String termo = scanner.nextLine();
 
         System.out.println("Resultados:");
-        bibliotecaService.buscarPorTitulo(termo).forEach(it -> System.out.println("- " + it.getTitulo()));
+        bibliotecaService.buscarPorTitulo(termo).forEach(it -> {
+            System.out.println("Titulo: " + it.getTitulo());
+            System.out.println("Autor: " + it.getAutor());
+            System.out.println("Tipo: " + it.getTipo());
+            System.out.println("Area: " + it.getArea());
+            System.out.println("--------------------");
+        });
+        bibliotecaService.buscarPorAutor(termo).forEach(it -> {
+            System.out.println("Titulo: " + it.getTitulo());
+            System.out.println("Autor: " + it.getAutor());
+            System.out.println("Tipo: " + it.getTipo());
+            System.out.println("Area: " + it.getArea());
+            System.out.println("--------------------");
+        });
+        bibliotecaService.buscarPorArea(termo).forEach(it -> {
+            System.out.println("Titulo: " + it.getTitulo());
+            System.out.println("Autor: " + it.getAutor());
+            System.out.println("Tipo: " + it.getTipo());
+            System.out.println("Area: " + it.getArea());
+            System.out.println("--------------------");
+        });
+        bibliotecaService.buscarPorTipo(termo).forEach(it -> {
+            System.out.println("Titulo: " + it.getTitulo());
+            System.out.println("Autor: " + it.getAutor());
+            System.out.println("Tipo: " + it.getTipo());
+            System.out.println("Area: " + it.getArea());
+            System.out.println("--------------------");
+        });
     }
 }

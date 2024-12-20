@@ -8,7 +8,7 @@ public class MaterialAudioVisual extends ItemBiblioteca{
     
     
     public MaterialAudioVisual(String titulo, String autor, String tipo, String area) {
-        super(autor, titulo, tipo, area); 
+        super(titulo, autor, tipo, area); 
     }
     
 

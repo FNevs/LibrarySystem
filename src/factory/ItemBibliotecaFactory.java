@@ -3,7 +3,7 @@ package factory;
 
 
 public class ItemBibliotecaFactory {
-    public static ItemBiblioteca criaItem(String titulo, String autor,String tipo,String area){
+    public static ItemBiblioteca criaItem(String titulo, String autor, String tipo,String area){
         switch (tipo) {
             case "livro":
                 return new Livro(titulo, autor, tipo, area);       

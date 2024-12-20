@@ -8,7 +8,7 @@ public class Jornal extends ItemBiblioteca{
     
     
     public Jornal(String titulo, String autor, String tipo, String area) {
-        super(autor, titulo, tipo, area); 
+        super(titulo, autor, tipo, area); 
     }
     
 

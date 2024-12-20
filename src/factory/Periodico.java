@@ -8,7 +8,7 @@ public class Periodico extends ItemBiblioteca {
     
     
     public Periodico(String titulo, String autor, String tipo, String area) {
-        super(titulo, autor, tipo, area);  // Chama o construtor da superclasse ItemBiblioteca
+        super(titulo, autor, tipo, area);
         
     }
   
